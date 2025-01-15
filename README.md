@@ -31,9 +31,10 @@ mkdir data/folder/extracted_pcd
 
 4. Run the code to extract pcd
 ```sh
-./bag2pcd_tf <rosbag_path> <save_pcd_folder> <pc2_topic_name> <world_or_map_frame_id>
+# The 1 at the last means to also store a raw map
+./bag2pcd_tf <rosbag_path> <save_pcd_folder> <pc2_topic_name> <world_or_map_frame_id> 1
 # example
-./bag2pcd_tf /home/data/folder/dlio.bag /home/data/folder/extracted_pcd /dlio/deskewed_point_cloud dlio_map
+./bag2pcd_tf /home/data/folder/dlio.bag /home/data/folder/extracted_pcd /dlio/deskewed_point_cloud dlio_map 1
 ```
 
 **Done !**
