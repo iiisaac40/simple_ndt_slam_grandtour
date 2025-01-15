@@ -1,3 +1,45 @@
+Extract Pointcloud from ROSBAG for GrandTour Project
+---
+
+This repo is only used for extract pointclouds from rosbag and feed to dynamic obstacles removal.
+
+1. Clone the code
+```sh
+git clone --recurse-submodules git@github.com:iiisaac40/simple_ndt_slam_grandtour.git
+```
+
+2. Navigate to the folder and build
+```sh
+cd simple_ndt_slam_grandtour
+
+### Prepare Glog 
+sudo chmod +x ./assets/scripts/setup_lib.sh
+sudo ./assets/scripts/setup_lib.sh
+
+cd simple_ndt_slam_grandtour/tools
+cmake -B build && cmake --build build
+```
+
+3. Prepare the Datafolder  
+Make a data folder to store the extracted pcd file for every scan
+
+```sh
+### Navigate to the folder where has the pointcloud rosbag file
+mkdir data/folder/extracted_pcd
+ 
+```
+
+4. Run the code to extract pcd
+```sh
+./bag2pcd_tf <rosbag_path> <save_pcd_folder> <pc2_topic_name> <world_or_map_frame_id>
+# example
+./bag2pcd_tf /home/data/folder/dlio.bag /home/data/folder/extracted_pcd /dlio/deskewed_point_cloud dlio_map
+```
+
+**Done !**
+
+*The following is the original REAME*
+
 # simple-ndt
 
 This package is extracted from [autoware.ai](https://github.com/Autoware-AI) 1.14.0 version, but with debug fixed, re-factor and speed up.
