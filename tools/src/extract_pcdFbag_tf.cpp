@@ -131,6 +131,8 @@ int main(int argc, char** argv) {
   bool pc_rec = false;
   for(const rosbag::MessageInstance& m : view)
   {
+    std::string pcd_file;
+
     if(m.getTopic() == pc2_topic)
     {
       sensor_msgs::PointCloud2::ConstPtr pc2 =
@@ -144,6 +146,15 @@ int main(int argc, char** argv) {
           // make sure no '/' in the frame_id
           frame_id.erase(std::remove(frame_id.begin(), frame_id.end(), '/'), frame_id.end());
           geometry_msgs::TransformStamped transform = tf_buffer.lookupTransform(world_frame_id, frame_id, pc2->header.stamp);
+
+          std::ostringstream tmp_filename;
+          uint32_t secs = pc2->header.stamp.sec;      // Extract seconds
+          uint32_t nsecs = pc2->header.stamp.nsec;    // Extract nanoseconds
+          tmp_filename << save_pcd_folder << "/pcd/" 
+                      << std::setfill('0') << std::setw(10) << secs  // Format seconds as 010
+                      << std::setfill('0') << std::setw(9) << nsecs // Format nanoseconds as 09
+                      << ".pcd";
+          pcd_file = tmp_filename.str();
 
           // Position
           pose[0] = transform.transform.translation.x;
@@ -197,10 +208,12 @@ int main(int argc, char** argv) {
       pcl_cloud->sensor_orientation_ = Eigen::Quaternionf(pose[6], pose[3], pose[4], pose[5]); // w, x, y, z
 
       // save the pcd
-      std::ostringstream tmp_filename;
-      tmp_filename << save_pcd_folder << "/pcd/" << std::setfill('0') <<
-      std::setw(6) << count << ".pcd"; std::string pcd_file =
-      tmp_filename.str(); pcl::io::savePCDFileBinary(pcd_file, *pcl_cloud);
+      // std::ostringstream tmp_filename;
+      // tmp_filename << save_pcd_folder << "/pcd/" << std::setfill('0') <<
+      // std::setw(6) << count << ".pcd"; std::string pcd_file =
+      // tmp_filename.str(); 
+      
+      pcl::io::savePCDFileBinary(pcd_file, *pcl_cloud);
 
       pc_rec = false;
       count++;
